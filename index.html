@@ -3,751 +3,547 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Interaktif - Soal Fungsi Kuadrat SMA/MA (1-38) - defantri.com</title>
-    <!-- MathJax for rendering LaTeX formulas -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['[', ']']]
-            },
-            svg: { fontCache: 'global' }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Quiz Interaktif - Soal Fungsi Kuadrat SMA/MA (1-38)</title>
+    <!-- KaTeX CSS & JS for fast, reliable math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --secondary: #0d9488;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --border: #e2e8f0;
-            --correct: #16a34a;
-            --incorrect: #dc2626;
-            --warning: #f59e0b;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 60px; }
-
-        header {
-            background: linear-gradient(135deg, var(--primary), #1e1b4b);
+        .nav-btn.active {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            font-weight: 700;
+        }
+        .nav-btn.answered {
+            background-color: #3b82f6;
             color: white;
-            padding: 20px 15px;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border-color: #2563eb;
         }
-
-        header h1 { font-size: 1.5rem; margin-bottom: 5px; }
-        header p { font-size: 0.9rem; opacity: 0.9; }
-
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-
-        /* Timer & Stats Bar */
-        .status-bar {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            position: sticky;
-            top: 10px;
-            z-index: 100;
-            border: 1px solid var(--border);
-        }
-
-        .stat-item { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem; }
-        .timer-badge { background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; }
-
-        /* Navigation Grid */
-        .nav-grid-container {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .nav-grid-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; color: #64748b; }
-        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
-        
-        .nav-btn {
-            height: 38px;
-            border: 1px solid var(--border);
-            background: #f1f5f9;
-            color: var(--text);
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.85rem;
-        }
-
-        .nav-btn:hover { border-color: var(--primary-light); background: #e2e8f0; }
-        .nav-btn.active { border: 2px solid var(--primary); background: #dbeafe; color: var(--primary); }
-        .nav-btn.answered { background: #3b82f6; color: white; border-color: #2563eb; }
-        .nav-btn.correct-ans { background: var(--correct); color: white; }
-        .nav-btn.wrong-ans { background: var(--incorrect); color: white; }
-
-        /* Question Box */
-        .question-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
-        }
-
-        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .q-title { font-weight: bold; color: var(--primary); font-size: 1.1rem; }
-        .q-source { background: #e0f2fe; color: #0369a1; font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
-
-        .q-text { font-size: 1.05rem; margin-bottom: 20px; color: #334155; }
-        .q-image { text-align: center; margin: 15px 0; }
-        .q-image svg { max-width: 100%; height: auto; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; }
-
-        /* Options */
-        .options-list { display: flex; flex-direction: column; gap: 12px; }
-        
         .option-btn {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: #fff;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            font-size: 1rem;
+            transition: all 0.2s ease;
         }
-
-        .option-btn:hover:not(.disabled) { background: #f8fafc; border-color: var(--primary-light); }
-        .option-prefix { font-weight: bold; width: 30px; flex-shrink: 0; color: #64748b; }
-        .option-text { flex-grow: 1; }
-
-        .option-btn.selected { border-color: var(--primary-light); background: #eff6ff; }
-        .option-btn.correct { background: #dcfce7 !important; border-color: var(--correct) !important; color: #14532d; font-weight: 600; }
-        .option-btn.wrong { background: #fee2e2 !important; border-color: var(--incorrect) !important; color: #7f1d1d; }
-
-        /* Explanation Box */
-        .explanation-box {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 8px;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            display: none;
+        .option-btn:hover:not(.disabled) {
+            border-color: #3b82f6;
+            background-color: #f0f9ff;
         }
-
-        .explanation-box.visible { display: block; animation: fadeIn 0.3s forwards; }
-        .explanation-title { font-weight: bold; color: #166534; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-
-        /* Footer Controls */
-        .controls { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
+        .option-btn.selected {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+        }
+        .option-btn.correct {
+            background-color: #dcfce7 !important;
+            border-color: #16a34a !important;
+            color: #14532d;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.95rem;
         }
-
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-secondary { background: #64748b; color: white; }
-        .btn-secondary:hover { background: #475569; }
-        .btn-danger { background: var(--incorrect); color: white; }
-        .btn-danger:hover { background: #b91c1c; }
-
-        /* Modal/Result Summary */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: none; justify-content: center; align-items: center; z-index: 1000;
-        }
-
-        .modal-card {
-            background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%;
-            text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-        }
-
-        .score-big { font-size: 3rem; font-weight: 800; color: var(--primary); margin: 15px 0; }
-        .score-details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .score-box { padding: 10px; border-radius: 8px; background: #f8fafc; font-weight: bold; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 600px) {
-            .status-bar { flex-direction: column; gap: 10px; align-items: flex-start; }
-            .controls { flex-direction: column; }
-            .btn { width: 100%; justify-content: center; }
+        .option-btn.wrong {
+            background-color: #fee2e2 !important;
+            border-color: #dc2626 !important;
+            color: #7f1d1d;
         }
     </style>
 </head>
-<body>
+<body class="pb-12 min-h-screen flex flex-col">
 
-    <header>
-        <h1>Quiz Fungsi Kuadrat SMA/MA</h1>
-        <p>Defantri.com - Bank Soal Lengkap & Pembahasan Interaktif (1-38)</p>
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white py-6 px-4 shadow-md">
+        <div class="max-w-5xl mx-auto text-center">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Quiz Fungsi Kuadrat SMA/MA</h1>
+        </div>
     </header>
 
-    <div class="container">
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 mt-6 flex-grow w-full">
         <!-- Status Bar -->
-        <div class="status-bar">
-            <div class="stat-item">
-                <span>Peserta:</span>
-                <strong id="user-name-display">Siswa SMA</strong>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 mb-6 flex flex-wrap justify-between items-center gap-4 sticky top-4 z-30">
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-slate-500">Peserta:</span>
+                <span class="font-semibold text-slate-800" id="user-name-display">Siswa SMA</span>
             </div>
-            <div class="stat-item">
-                <span>Skor Saat Ini:</span>
-                <span id="current-score" style="color: var(--primary); font-weight: bold;">0</span>
-            </div>
-            <div class="stat-item">
-                <span>Sisa Waktu:</span>
-                <span class="timer-badge" id="timer">110:00</span>
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-slate-500">Skor Saat Ini:</span>
+                <span id="current-score" class="font-bold text-lg text-blue-600">0</span>
             </div>
         </div>
 
         <!-- Navigation Grid -->
-        <div class="nav-grid-container">
-            <div class="nav-grid-title">Navigasi Soal (Klik untuk berpindah):</div>
-            <div class="nav-grid" id="nav-grid"></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 mb-6">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Navigasi Soal (Klik untuk berpindah):</div>
+            <div class="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 gap-2" id="nav-grid"></div>
         </div>
 
         <!-- Question Card -->
-        <div class="question-card">
-            <div class="q-header">
-                <span class="q-title" id="q-number">Soal Nomor 1</span>
-                <span class="q-source" id="q-source">UM UGM 2017</span>
+        <div class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-6">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-5">
+                <span class="text-lg font-bold text-blue-900" id="q-number">Soal Nomor 1</span>
+                <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-3 py-1 rounded-full" id="q-source">UM UGM 2017</span>
             </div>
-            <div class="q-text" id="q-text"></div>
-            <div class="q-image" id="q-image"></div>
-            <div class="options-list" id="options-container"></div>
 
-            <!-- Pembahasan -->
-            <div class="explanation-box" id="explanation-box">
-                <div class="explanation-title">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 103.636 5.05l-.707.707a1 1 0 001.414 1.414l.707-.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1a1 1 0 112 0v1a1 1 0 11-2 0zM12 14a1 1 0 110-2 1 1 0 010 2zM10 7a3 3 0 00-3 3 1 1 0 001 1h4a1 1 0 001-1 3 3 0 00-3-3z"/></svg>
-                    Alternatif Pembahasan:
+            <!-- Question Text -->
+            <div class="text-slate-800 text-base md:text-lg leading-relaxed mb-6" id="q-text"></div>
+
+            <!-- Question Graphic / SVG Illustration -->
+            <div class="flex justify-center items-center my-6" id="q-image"></div>
+
+            <!-- Options List -->
+            <div class="flex flex-col gap-3 mb-6" id="options-container"></div>
+
+            <!-- Explanation Box -->
+            <div class="hidden border border-emerald-200 bg-emerald-50/60 rounded-xl p-5 mt-6 transition-all" id="explanation-box">
+                <div class="font-bold text-emerald-900 flex items-center gap-2 mb-3 text-base">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    Pembahasan & Solusi Lengkap:
                 </div>
-                <div id="explanation-text"></div>
+                <div class="text-slate-700 text-sm md:text-base leading-relaxed space-y-2" id="explanation-text"></div>
             </div>
         </div>
 
         <!-- Navigation Controls -->
-        <div class="controls">
-            <button class="btn btn-secondary" id="btn-prev" onclick="prevQuestion()">&larr; Sebelumnya</button>
-            <button class="btn btn-danger" onclick="confirmReset()">Ulangi Tes</button>
-            <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()">Selanjutnya &rarr;</button>
+        <div class="flex flex-col sm:flex-row justify-between gap-3 mb-8">
+            <button class="px-5 py-2.5 rounded-lg font-semibold bg-slate-600 text-white hover:bg-slate-700 transition disabled:opacity-50" id="btn-prev" onclick="prevQuestion()">&larr; Sebelumnya</button>
+            <button class="px-5 py-2.5 rounded-lg font-semibold bg-rose-600 text-white hover:bg-rose-700 transition" onclick="confirmReset()">Ulangi Tes</button>
+            <button class="px-5 py-2.5 rounded-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition" id="btn-next" onclick="nextQuestion()">Selanjutnya &rarr;</button>
         </div>
-    </div>
+    </main>
 
     <!-- Modal Hasil -->
-    <div class="modal-overlay" id="result-modal">
-        <div class="modal-card">
-            <h2>Hasil Evaluasi Quiz</h2>
-            <div class="score-big" id="final-score">0</div>
-            <p id="score-status">Tetap Semangat!</p>
-            <div class="score-details">
-                <div class="score-box" style="color: var(--correct)">Benar<br><span id="count-correct">0</span></div>
-                <div class="score-box" style="color: var(--incorrect)">Salah<br><span id="count-wrong">0</span></div>
-                <div class="score-box" style="color: var(--warning)">Kosong<br><span id="count-empty">38</span></div>
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden justify-center items-center z-50 p-4" id="result-modal">
+        <div class="bg-white rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl border border-slate-100">
+            <h2 class="text-xl font-bold text-slate-800 mb-2">Hasil Evaluasi Quiz</h2>
+            <p class="text-slate-500 text-sm">Nilai Akhir Anda:</p>
+            <div class="text-5xl font-extrabold text-blue-600 my-4" id="final-score">0</div>
+            <p class="text-sm font-medium text-slate-600 mb-6" id="score-status">Tetap Semangat!</p>
+            <div class="grid grid-cols-3 gap-3 my-4">
+                <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-100"><span class="text-xs text-emerald-600 font-semibold">Benar</span><br><span class="text-xl font-bold text-emerald-700" id="count-correct">0</span></div>
+                <div class="p-3 rounded-lg bg-rose-50 border border-rose-100"><span class="text-xs text-rose-600 font-semibold">Salah</span><br><span class="text-xl font-bold text-rose-700" id="count-wrong">0</span></div>
+                <div class="p-3 rounded-lg bg-amber-50 border border-amber-100"><span class="text-xs text-amber-600 font-semibold">Kosong</span><br><span class="text-xl font-bold text-amber-700" id="count-empty">38</span></div>
             </div>
-            <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal()">Lihat Pembahasan / Lanjutkan</button>
+            <button class="w-full mt-4 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition" onclick="closeModal()">Lihat Pembahasan / Lanjutkan</button>
         </div>
     </div>
 
+    <!-- JavaScript Data and Functions -->
     <script>
-        // Data Soal Lengkap 1-38 dari PDF defantri.com
         const questionsData = [
             {
                 id: 1,
                 source: "Soal UM UGM 2017 Kode 723",
-                text: "Berdasarkan perkiraan kebutuhan ketela kota P pada $x$ tahun setelah 2017 sebesar: $h(x)=180x^2+540x+1080$ kwintal. Produk ketela kota tersebut pada tahun yang sama sebesar $f(x)=720x+20880$ kwintal. Untuk mencukupi kebutuhannya, kota tersebut harus mendatangkan ketela dari luar kota mulai pada tahun...",
+                text: "Berdasarkan perkiraan kebutuhan ketela kota P pada $x$ tahun setelah 2017 sebesar $h(x)=180x^2+540x+1080$ kwintal. Produk ketela kota tersebut pada tahun yang sama sebesar $f(x)=720x+20880$ kwintal. Untuk mencukupi kebutuhannya, kota tersebut harus mendatangkan ketela dari luar kota mulai pada tahun...",
+                svg: null,
                 options: ["2020", "2023", "2028", "2029", "2032"],
                 correct: 3,
-                explanation: "Kebutuhan $h(x) = 180x^2+540x+1080$ dan produksi $f(x) = 720x+20880$. Produksi sama dengan kebutuhan saat $h(x) = f(x)$:<br>" +
-                             "$180x^2+540x+1080 = 720x+20880$<br>" +
-                             "$180x^2 - 180x - 19800 = 0$<br>" +
-                             "$x^2 - x - 110 = 0 \implies (x - 11)(x + 10) = 0$<br>" +
-                             "Diperoleh $x = 11$ (11 tahun setelah 2017 adalah tahun 2028). Kebutuhan akan melebihi produksi mulai tahun <b>2029</b>."
+                explanation: "Kebutuhan ketela: $h(x) = 180x^2+540x+1080$<br>Produksi ketela: $f(x) = 720x+20880$<br><br>Cari titik saat produksi sama dengan kebutuhan ($h(x) = f(x)$):<br>$$180x^2+540x+1080 = 720x+20880$$$$180x^2 - 180x - 19800 = 0$$Bagi dengan 180:<br>$$x^2 - x - 110 = 0$$$$(x - 11)(x + 10) = 0$$Diperoleh $x = 11$ (karena $x \\ge 0$). Maka produksi sama dengan kebutuhan pada tahun $2017 + 11 = 2028$. Kota tersebut harus mendatangkan ketela dari luar kota mulai tahun berikutnya, yaitu <b>2029</b>."
             },
             {
                 id: 2,
                 source: "Soal USM STIS 2017",
                 text: "Persamaan grafik fungsi kuadrat pada gambar di bawah ini adalah...",
-                svg: `<svg width="240" height="200" viewBox="-3 -1 6 7">
-                        <line x1="-3" y1="0" x2="3" y2="0" stroke="#94a3b8" stroke-width="0.05"/>
-                        <line x1="0" y1="-1" x2="0" y2="6" stroke="#94a3b8" stroke-width="0.05"/>
-                        <path d="M -1.2 6 Q 1 -1 3.2 6" fill="none" stroke="#2563eb" stroke-width="0.1"/>
-                        <circle cx="0" cy="2" r="0.15" fill="#dc2626"/>
-                        <text x="0.2" y="2.2" font-size="0.4" fill="#1e293b" font-weight="bold">(0,2)</text>
-                        <circle cx="1" cy="1" r="0.1" fill="#16a34a"/>
-                        <text x="1.2" y="1.2" font-size="0.35" fill="#1e293b">(1,1)</text>
+                svg: `<svg viewBox="0 0 320 220" class="w-full max-w-xs bg-slate-50 rounded-xl border border-slate-200 shadow-inner">
+                        <!-- Grid Lines -->
+                        <path d="M 20 0 V 220 M 60 0 V 220 M 100 0 V 220 M 140 0 V 220 M 180 0 V 220 M 220 0 V 220 M 260 0 V 220 M 300 0 V 220" stroke="#e2e8f0" stroke-width="1"/>
+                        <path d="M 0 30 H 320 M 0 70 H 320 M 0 110 H 320 M 0 150 H 320 M 0 190 H 320" stroke="#e2e8f0" stroke-width="1"/>
+                        <!-- Sumbu Koordinat -->
+                        <line x1="60" y1="0" x2="60" y2="220" stroke="#475569" stroke-width="2"/>
+                        <line x1="0" y1="190" x2="320" y2="190" stroke="#475569" stroke-width="2"/>
+                        <!-- Panah Sumbu -->
+                        <polygon points="60,2 55,12 65,12" fill="#475569"/>
+                        <polygon points="318,190 308,185 308,195" fill="#475569"/>
+                        <text x="305" y="180" font-size="12" font-weight="bold" fill="#334155">X</text>
+                        <text x="70" y="15" font-size="12" font-weight="bold" fill="#334155">Y</text>
+                        <text x="45" y="205" font-size="11" fill="#64748b">O</text>
+                        <!-- Parabola y = x^2 - 2x + 2 -> Puncak (1,1), Potong Y (0,2) -->
+                        <path d="M 20 30 Q 120 270 220 30" fill="none" stroke="#2563eb" stroke-width="3"/>
+                        <!-- Titik Puncak (1,1) -> (120, 150) -->
+                        <circle cx="120" cy="150" r="5" fill="#16a34a"/>
+                        <text x="130" y="155" font-size="12" font-weight="bold" fill="#15803d">(1,1)</text>
+                        <!-- Titik Potong Y (0,2) -> (60, 110) -->
+                        <circle cx="60" cy="110" r="5" fill="#dc2626"/>
+                        <text x="70" y="110" font-size="12" font-weight="bold" fill="#b91c1c">(0,2)</text>
+                        <!-- Garis Bantu -->
+                        <line x1="120" y1="150" x2="120" y2="190" stroke="#16a34a" stroke-dasharray="4" stroke-width="1.5"/>
+                        <line x1="60" y1="150" x2="120" y2="150" stroke="#16a34a" stroke-dasharray="4" stroke-width="1.5"/>
                       </svg>`,
                 options: ["$y=x^2-2x+2$", "$y=x^2+2x+1$", "$y=x^2-2x+1$", "$y=x^2-2x$", "$y=x^2+2x$"],
                 correct: 0,
-                explanation: "Titik puncak $(x_p, y_p) = (1,1)$ dan melalui titik $(0,2)$.<br>" +
-                             "Gunakan rumus $y = a(x - x_p)^2 + y_p$:<br>" +
-                             "$2 = a(0 - 1)^2 + 1 \implies 2 = a + 1 \implies a = 1$.<br>" +
-                             "Persamaan: $y = 1(x - 1)^2 + 1 = x^2 - 2x + 1 + 1 = x^2 - 2x + 2$."
+                explanation: "Titik puncak $(x_p, y_p) = (1,1)$ dan melalui titik $(0,2)$.<br>Gunakan rumus puncak parabola: $$y = a(x - x_p)^2 + y_p$$Substitusi puncak $(1,1)$ dan titik $(0,2)$:<br>$$2 = a(0 - 1)^2 + 1 \\implies 2 = a + 1 \\implies a = 1$$Persamaan fungsi kuadrat:<br>$$y = 1(x - 1)^2 + 1 = x^2 - 2x + 1 + 1 = x^2 - 2x + 2$$"
             },
             {
                 id: 3,
                 source: "Soal SIMAK UI 2009 Kode 921",
                 text: "Jika suatu garis lurus yang melalui $(0,-14)$ tidak memotong maupun menyinggung parabola $y=2x^2+5x-12$, maka gradien garis tersebut, $m$, memenuhi...",
+                svg: null,
                 options: ["$m < -9$", "$m < -1$", "$-1 < m < 9$", "$1 < m < 9$", "$m > 9$"],
                 correct: 3,
-                explanation: "Garis melalui $(0,-14) \implies y = mx - 14$.<br>" +
-                             "Persamaan persekutuan: $2x^2 + 5x - 12 = mx - 14 \implies 2x^2 + (5-m)x + 2 = 0$.<br>" +
-                             "Tidak memotong/menyinggung $\implies D < 0$:<br>" +
-                             "$(5-m)^2 - 4(2)(2) < 0 \implies m^2 - 10m + 25 - 16 < 0 \implies m^2 - 10m + 9 < 0$.<br>" +
-                             "$(m - 1)(m - 9) < 0 \implies 1 < m < 9$."
+                explanation: "Garis melalui $(0,-14) \\implies y = mx - 14$.<br>Persamaan persekutuan garis dan parabola: $$2x^2 + 5x - 12 = mx - 14$$$$2x^2 + (5-m)x + 2 = 0$$Garis tidak memotong/menyinggung parabola maka Diskriminan $D < 0$:<br>$$b^2 - 4ac < 0$$$$(5-m)^2 - 4(2)(2) < 0$$$$m^2 - 10m + 25 - 16 < 0$$$$m^2 - 10m + 9 < 0$$$$(m - 1)(m - 9) < 0$$Diperoleh batas nilai gradien: $1 < m < 9$."
             },
             {
                 id: 4,
                 source: "Soal SIMAK UI 2009 Kode 924",
                 text: "Diketahui fungsi $mx^2 - 2x^2 + 2mx + m - 3$. Agar fungsi tersebut senantiasa berada di bawah sumbu-$x$, maka nilai $m$ yang mungkin adalah...",
+                svg: null,
                 options: ["$m < -3$", "$m < -2$", "$m < 1\\frac{1}{5}$", "$m < 2$", "$m > 3$"],
                 correct: 2,
-                explanation: "Fungsi senantiasa di bawah sumbu-$x$ berarti <b>Definit Negatif</b> ($a < 0$ dan $D < 0$).<br>" +
-                             "Fungsi: $y = (m-2)x^2 + 2mx + (m-3)$.<br>" +
-                             "1) $a < 0 \implies m - 2 < 0 \implies m < 2$.<br>" +
-                             "2) $D < 0 \implies (2m)^2 - 4(m-2)(m-3) < 0 \implies 4m^2 - 4(m^2 - 5m + 6) < 0 \implies 20m - 24 < 0 \implies m < \\frac{6}{5} = 1\\frac{1}{5}$.<br>" +
-                             "Irisan dari kedua syarat adalah $m < 1\\frac{1}{5}$."
+                explanation: "Fungsi $y = (m-2)x^2 + 2mx + (m-3)$ senantiasa berada di bawah sumbu-$x$ (Definit Negatif).<br>Syarat definit negatif: $a < 0$ dan $D < 0$.<br><br>1) Syarat $a < 0$: $$m - 2 < 0 \\implies m < 2$$2) Syarat $D < 0$: $$(2m)^2 - 4(m-2)(m-3) < 0$$$$4m^2 - 4(m^2 - 5m + 6) < 0$$$$20m - 24 < 0 \\implies m < \\frac{6}{5} = 1\\frac{1}{5}$$Irisan dari kedua syarat tersebut adalah $m < 1\\frac{1}{5}$."
             },
             {
                 id: 5,
                 source: "Soal SIMAK UI 2010 Kode 204",
                 text: "Garis $y=mx+5$ memotong parabola $y=x^2-4mx+4n$ di titik $P$ dan $Q$. Jika $P=(1,6)$, maka koordinat $Q$ adalah...",
+                svg: null,
                 options: ["$(\\frac{3}{2}, \\frac{13}{2})$", "$(\\frac{5+\\sqrt{21}}{2}, \\frac{15+\\sqrt{21}}{2})$", "$(\\frac{5-\\sqrt{21}}{2}, \\frac{15-\\sqrt{21}}{2})$", "$(\\frac{9}{4}, \\frac{29}{4})$", "$(4,9)$"],
                 correct: 4,
-                explanation: "Garis melalui $(1,6) \implies 6 = m(1) + 5 \implies m = 1$.<br>" +
-                             "Parabola melalui $(1,6) \implies 6 = 1^2 - 4(1)(1) + 4n \implies 6 = -3 + 4n \implies 4n = 9 \implies n = \\frac{9}{4}$.<br>" +
-                             "Titik potong garis $y = x + 5$ dan $y = x^2 - 4x + 9$:<br>" +
-                             "$x^2 - 4x + 9 = x + 5 \implies x^2 - 5x + 4 = 0 \implies (x-1)(x-4) = 0$.<br>" +
-                             "Untuk $x = 4 \implies y = 4 + 5 = 9$. Koordinat $Q = (4,9)$."
+                explanation: "Garis melalui $P(1,6) \\implies 6 = m(1) + 5 \\implies m = 1$.<br>Parabola melalui $P(1,6) \\implies 6 = 1^2 - 4(1)(1) + 4n \\implies 4n = 9 \\implies n = \\frac{9}{4}$.<br><br>Persamaan persekutuan garis $y = x + 5$ dan parabola $y = x^2 - 4x + 9$: $$x^2 - 4x + 9 = x + 5$$$$x^2 - 5x + 4 = 0$$$$(x-1)(x-4) = 0$$Diperoleh $x_1 = 1$ (titik $P$) dan $x_2 = 4$ (titik $Q$).<br>Untuk $x = 4 \\implies y = 4 + 5 = 9$. Jadi koordinat $Q = (4,9)$."
             },
             {
                 id: 6,
                 source: "Soal SIMAK UI 2012 Kode 221",
                 text: "Sebuah garis $h$ yang melalui titik asal memotong kurva $2y = 3x^2 - 2x + 1$ di dua titik di mana jumlah nilai $x$-nya adalah 10, maka gradien dari garis $h$ adalah...",
+                svg: null,
                 options: ["-1", "$\\frac{3}{2}$", "6", "14", "15"],
                 correct: 3,
-                explanation: "Garis melalui titik asal: $y = mx$.<br>" +
-                             "Substitusi ke kurva: $2(mx) = 3x^2 - 2x + 1 \implies 3x^2 - 2(m+1)x + 1 = 0$.<br>" +
-                             "Jumlah akar $x_1 + x_2 = -\\frac{b}{a} \implies 10 = \\frac{2(m+1)}{3} \implies 30 = 2m + 2 \implies 28 = 2m \implies m = 14$."
+                explanation: "Garis melalui titik asal $(0,0) \\implies y = mx$.<br>Substitusi ke kurva: $$2(mx) = 3x^2 - 2x + 1$$$$3x^2 - 2(m+1)x + 1 = 0$$Jumlah akar $x_1 + x_2 = -\\frac{b}{a} = 10$: $$\\frac{2(m+1)}{3} = 10$$$$2m + 2 = 30 \\implies 2m = 28 \\implies m = 14$$"
             },
             {
                 id: 7,
                 source: "Soal SIMAK UI 2012 Kode 221",
                 text: "Jika garis singgung parabola $y=4x-x^2$ di titik $M(1,3)$ juga merupakan garis singgung parabola $y=x^2-6x+k$, maka nilai dari $5-\\sqrt{k-1}$ adalah...",
+                svg: null,
                 options: ["0", "1", "2", "3", "4"],
                 correct: 1,
-                explanation: "Gradien garis singgung $m = y' = 4 - 2x$. Di $(1,3) \implies m = 4 - 2(1) = 2$.<br>" +
-                             "Persamaan garis singgung: $y - 3 = 2(x - 1) \implies y = 2x + 1$.<br>" +
-                             "Menyinggung $y = x^2 - 6x + k \implies x^2 - 6x + k = 2x + 1 \implies x^2 - 8x + (k-1) = 0$.<br>" +
-                             "Syarat menyinggung $D = 0 \implies (-8)^2 - 4(1)(k-1) = 0 \implies 64 - 4k + 4 = 0 \implies 4k = 68 \implies k = 17$.<br>" +
-                             "Nilai $5 - \\sqrt{17 - 1} = 5 - 4 = 1$."
+                explanation: "Gradien garis singgung $m = y' = 4 - 2x$. Pada titik $(1,3) \\implies m = 4 - 2(1) = 2$.<br>Persamaan garis singgung: $$y - 3 = 2(x - 1) \\implies y = 2x + 1$$Garis ini juga menyinggung $y = x^2 - 6x + k$: $$x^2 - 6x + k = 2x + 1 \\implies x^2 - 8x + (k-1) = 0$$Syarat menyinggung ($D = 0$): $$(-8)^2 - 4(1)(k-1) = 0$$$$64 - 4k + 4 = 0 \\implies 4k = 68 \\implies k = 17$$Maka nilai $5 - \\sqrt{k-1} = 5 - \\sqrt{17-1} = 5 - 4 = 1$."
             },
             {
                 id: 8,
                 source: "Soal UM UGM 2015 Kode 622",
                 text: "Parabola $y=ax^2+bx+c$, $a>0$ memotong sumbu-$x$ di $x=p$ dan $x=2p$, $p\\neq 0$. Nilai $c-b>0$ terpenuhi apabila...",
+                svg: null,
                 options: ["$-\\frac{3}{2} < p < 0$", "$p < -\\frac{3}{2}$ atau $p > 0$", "$p < -\\frac{3}{2}$ atau $p > \\frac{3}{2}$", "$0 < p < \\frac{3}{2}$", "$p < 0$ atau $p > \\frac{3}{2}$"],
-                correct: 0,
-                explanation: "Fungsi memotong sumbu-$x$ di $x=p$ dan $x=2p$. Ambil $a=1$:<br>" +
-                             "$y = (x-p)(x-2p) = x^2 - 3px + 2p^2 \implies b = -3p, c = 2p^2$.<br>" +
-                             "$c - b > 0 \implies 2p^2 - (-3p) > 0 \implies 2p^2 + 3p > 0 \implies p(2p + 3) > 0$.<br>" +
-                             "Nilai yang memenuhi adalah $p < -\\frac{3}{2}$ atau $p > 0$ (untuk $a>0$ secara umum, hasilnya $-\\frac{3}{2} < p < 0$ jika disesuaikan tanda ketaksamaan pada opsi A)."
+                correct: 1,
+                explanation: "Bentuk parabola: $y = a(x - p)(x - 2p) = a(x^2 - 3px + 2p^2)$.<br>Diperoleh $b = -3ap$ dan $c = 2ap^2$.<br>Syarat $c - b > 0$: $$2ap^2 - (-3ap) > 0$$$$2ap^2 + 3ap > 0$$Karena $a > 0$, bagi dengan $a$: $$2p^2 + 3p > 0 \\implies p(2p + 3) > 0$$Batas pembuat nol $p = 0$ dan $p = -\\frac{3}{2}$. HP: $p < -\\frac{3}{2}$ atau $p > 0$."
             },
             {
                 id: 9,
                 source: "Soal UM UGM 2016 Kode 571",
                 text: "Diketahui ordinat titik puncak fungsi kuadrat $f(x)=ax^2+bx+c$ adalah 2. Jika $f(2)=f(4)=0$ maka $a+b+c = ...$",
+                svg: null,
                 options: ["-10", "-6", "-4", "4", "6"],
                 correct: 1,
-                explanation: "$f(2)=f(4)=0 \implies$ sumbu simetri $x_p = \\frac{2+4}{2} = 3$. Titik puncak $(3,2)$.<br>" +
-                             "Bentuk fungsi: $y = a(x-3)^2 + 2$. Melalui $(2,0) \implies 0 = a(2-3)^2 + 2 \implies a = -2$.<br>" +
-                             "$f(x) = -2(x-3)^2 + 2 = -2(x^2 - 6x + 9) + 2 = -2x^2 + 12x - 16$.<br>" +
-                             "$a = -2, b = 12, c = -16 \implies a + b + c = -2 + 12 - 16 = -6$."
+                explanation: "Akar-akar $f(2)=f(4)=0 \\implies$ sumbu simetri $x_p = \\frac{2+4}{2} = 3$.<br>Titik puncak parabola adalah $(3,2)$.<br>Gunakan bentuk puncak: $$y = a(x-3)^2 + 2$$Substitusi titik $(2,0)$: $$0 = a(2-3)^2 + 2 \\implies a = -2$$Fungsi kuadrat lengkap: $$f(x) = -2(x-3)^2 + 2 = -2(x^2 - 6x + 9) + 2 = -2x^2 + 12x - 16$$Diperoleh $a = -2, b = 12, c = -16$. Maka $a + b + c = -2 + 12 - 16 = -6$."
             },
             {
                 id: 10,
                 source: "Soal SNMPTN 2012 Kode 421",
                 text: "Jika $f$ adalah fungsi kuadrat yang grafiknya melalui titik $(1,0)$, $(4,0)$, dan $(0,-4)$, maka nilai $f(7)$ adalah...",
+                svg: null,
                 options: ["-16", "-17", "-18", "-19", "-20"],
                 correct: 2,
-                explanation: "Memotong sumbu-$x$ di $(1,0)$ dan $(4,0) \implies f(x) = a(x-1)(x-4)$.<br>" +
-                             "Melalui $(0,-4) \implies -4 = a(0-1)(0-4) \implies -4 = 4a \implies a = -1$.<br>" +
-                             "$f(x) = -1(x-1)(x-4) = -(x^2 - 5x + 4) = -x^2 + 5x - 4$.<br>" +
-                             "$f(7) = -(7)^2 + 5(7) - 4 = -49 + 35 - 4 = -18$."
+                explanation: "Melalui titik potong sumbu-$x$ di $(1,0)$ dan $(4,0)$: $$f(x) = a(x-1)(x-4)$$Melalui $(0,-4) \\implies -4 = a(0-1)(0-4) \\implies 4a = -4 \\implies a = -1$.<br>Persamaan fungsi: $$f(x) = -1(x-1)(x-4) = -(x^2 - 5x + 4)$$Maka $f(7) = -((7)^2 - 5(7) + 4) = -(49 - 35 + 4) = -18$."
             },
             {
                 id: 11,
                 source: "Soal SBMPTN 2013 Kode 427",
                 text: "Jika grafik fungsi $f(x)=ax^2+bx+c$ mempunyai titik puncak $(8,4)$ dan memotong sumbu-$x$ negatif, maka...",
+                svg: null,
                 options: ["$a>0, b>0$ dan $c>0$", "$a<0, b<0$ dan $c>0$", "$a<0, b>0$ dan $c<0$", "$a>0, b>0$ dan $c<0$", "$a<0, b>0$ dan $c>0$"],
                 correct: 4,
-                explanation: "1) Puncak di kuadran I $(8,4)$ dan memotong sumbu-$x$ negatif $\implies$ parabola terbuka ke bawah ($a < 0$).<br>" +
-                             "2) Sumbu simetri $x_p = -\\frac{b}{2a} = 8 \implies b = -16a$. Karena $a < 0$, maka $b > 0$.<br>" +
-                             "3) Parabola memotong sumbu-$y$ di atas origin $\implies c > 0$.<br>" +
-                             "Kesimpulan: $a < 0, b > 0, c > 0$."
+                explanation: "1) Puncak di kuadran I $(8,4)$ dan memotong sumbu-$x$ negatif $\\implies$ parabola terbuka ke bawah ($a < 0$).<br>2) Sumbu simetri $x_p = -\\frac{b}{2a} = 8 \\implies b = -16a$. Karena $a < 0$, maka $b > 0$.<br>3) Karena grafik memotong sumbu-$x$ negatif dan puncaknya positif, perpotongan dengan sumbu-$y$ berada di atas origin $\\implies c > 0$.<br>Kesimpulan: $a < 0, b > 0, c > 0$."
             },
             {
                 id: 12,
                 source: "Soal SBMPTN 2018 Kode 526",
                 text: "Titik $(a,b)$ terletak pada grafik $y=bx^2+(1-b^2)x-56$. Jika $a-b=7$, maka nilai $ab$ adalah...",
+                svg: null,
                 options: ["7", "5", "1", "-1", "-5"],
                 correct: 0,
-                explanation: "Substitusi $(a,b)$ ke fungsi:<br>" +
-                             "$b = b(a)^2 + (1-b^2)a - 56 \implies b = ba^2 + a - ab^2 - 56$<br>" +
-                             "$56 = ba^2 - ab^2 + a - b = ab(a-b) + (a-b)$.<br>" +
-                             "Diketahui $a-b=7 \implies 56 = ab(7) + 7 \implies 49 = 7ab \implies ab = 7$."
+                explanation: "Substitusi $(a,b)$ ke fungsi kuadrat: $$b = b(a)^2 + (1-b^2)a - 56$$$$b = ba^2 + a - ab^2 - 56$$$$56 = ba^2 - ab^2 + a - b$$Faktorkan persamaan: $$56 = ab(a-b) + (a-b)$$Diketahui $a-b=7$: $$56 = 7ab + 7 \\implies 49 = 7ab \\implies ab = 7$$"
             },
             {
                 id: 13,
                 source: "Soal SBMPTN 2018 Kode 527",
                 text: "Jika puncak grafik fungsi $y=px^2-qx-1$ sama dengan puncak grafik $y=x^2-2x+4$, maka nilai $p+q$ adalah...",
+                svg: null,
                 options: ["-12", "-4", "0", "4", "12"],
                 correct: 0,
-                explanation: "Puncak $y = x^2 - 2x + 4$: $x_p = -\\frac{-2}{2(1)} = 1$, $y_p = 1^2 - 2(1) + 4 = 3$. Puncak $(1,3)$.<br>" +
-                             "Puncak $y = px^2 - qx - 1$ di $(1,3)$:<br>" +
-                             "1) $x_p = -\\frac{-q}{2p} = 1 \implies q = 2p$.<br>" +
-                             "2) $y_p = 3 \implies 3 = p(1)^2 - q(1) - 1 \implies p - q = 4$.<br>" +
-                             "Substitusi $q = 2p \implies p - 2p = 4 \implies p = -4 \implies q = -8$.<br>" +
-                             "Maka $p + q = -4 + (-8) = -12$."
+                explanation: "Cari puncak $y = x^2 - 2x + 4$: $$x_p = -\\frac{-2}{2(1)} = 1, \\quad y_p = 1^2 - 2(1) + 4 = 3 \\implies (1,3)$$Puncak $y = px^2 - qx - 1$ juga di $(1,3)$:<br>1) $x_p = -\\frac{-q}{2p} = 1 \\implies q = 2p$.<br>2) $y_p = 3 \\implies 3 = p(1)^2 - q(1) - 1 \\implies p - q = 4$.<br>Substitusi $q = 2p \\implies p - 2p = 4 \\implies p = -4$ dan $q = -8$.<br>Maka $p + q = -4 + (-8) = -12$."
             },
             {
                 id: 14,
                 source: "Soal UMB-PT 2014 Kode 672",
-                text: "Jika suatu fungsi kuadrat mencapai minimum di titik $(3,-2)$ dan grafiknya melalui titik $(1,6)$ maka parabola memotong sumbu-$y$ di titik...",
+                text: "Jika suatu fungsi kuadrat mencapai minimum di titik $(3,-2)$ dan grafiknya melalui titik $(1,6)$, maka parabola memotong sumbu-$y$ di titik...",
+                svg: null,
                 options: ["$(0,9)$", "$(0,12)$", "$(0,16)$", "$(0,18)$", "$(0,20)$"],
                 correct: 2,
-                explanation: "Fungsi kuadrat dengan puncak $(3,-2)$: $y = a(x-3)^2 - 2$.<br>" +
-                             "Melalui $(1,6) \implies 6 = a(1-3)^2 - 2 \implies 8 = 4a \implies a = 2$.<br>" +
-                             "Persamaan: $y = 2(x-3)^2 - 2$. Memotong sumbu-$y$ saat $x=0$:<br>" +
-                             "$y = 2(0-3)^2 - 2 = 2(9) - 2 = 16 \implies (0,16)$."
+                explanation: "Puncak minimum di $(3,-2) \\implies y = a(x-3)^2 - 2$.<br>Melalui titik $(1,6)$: $$6 = a(1-3)^2 - 2 \\implies 8 = 4a \\implies a = 2$$Fungsi kuadrat: $y = 2(x-3)^2 - 2$.<br>Memotong sumbu-$y$ saat $x = 0$: $$y = 2(0-3)^2 - 2 = 2(9) - 2 = 16$$Titik potong sumbu-$y$ adalah $(0,16)$."
             },
             {
                 id: 15,
                 source: "Soal UMB-PT 2014 Kode 573",
                 text: "Diketahui garis $x=ky$ ($k$ konstanta bilangan bulat) dan parabola $x^2+3y+1=0$. Himpunan semua $k$ dimana garis memotong parabola adalah...",
-                options: ["\\{0, 1, 2\\}", "\\{-1, 0, 2\\}", "\\{-1, 0, 1\\}", "\\{-2, 0, 1\\}", "\\{-2, -1, 1\\}"],
+                svg: null,
+                options: ["$\\{0, 1, 2\\}$", "$\\{-1, 0, 2\\}$", "$\\{-1, 0, 1\\}$", "$\\{-2, 0, 1\\}$", "$\\{-2, -1, 1\\}$"],
                 correct: 2,
-                explanation: "Substitusi $x = ky$ ke $x^2 + 3y + 1 = 0 \implies k^2 y^2 + 3y + 1 = 0$.<br>" +
-                             "Syarat memotong ($D > 0$): $3^2 - 4(k^2)(1) > 0 \implies 9 - 4k^2 > 0 \implies 4k^2 < 9 \implies -\\frac{3}{2} < k < \\frac{3}{2}$.<br>" +
-                             "Karena $k$ adalah bilangan bulat, maka $k \\in \\{-1, 0, 1\\}$."
+                explanation: "Substitusi $x = ky$ ke $x^2 + 3y + 1 = 0$: $$(ky)^2 + 3y + 1 = 0 \\implies k^2 y^2 + 3y + 1 = 0$$Syarat memotong ($D \\ge 0$): $$3^2 - 4(k^2)(1) \\ge 0 \\implies 9 - 4k^2 \\ge 0 \\implies k^2 \\le \\frac{9}{4}$$Diperoleh $-\\frac{3}{2} \\le k \\le \\frac{3}{2}$.<br>Karena $k$ bilangan bulat, maka $k \\in \\{-1, 0, 1\\}$."
             },
             {
                 id: 16,
                 source: "Soal UM UGM 2014 Kode 521",
                 text: "Diberikan dua parabola dengan persamaan $f(x)=ax^2+bx+c$ dan $g(x)=px^2+qx+r$ tidak berpotongan dan $\\frac{b}{a}=\\frac{q}{p}$, maka jarak terdekat dua parabola tersebut adalah selisih dari...",
-                options: ["$r$ dan $c$", "$f(-\\frac{b}{2a})$ dan $g(-\\frac{q}{2p})$", "$f(-b)$ dan $g(-q)$", "$f(\\frac{b}{a})$ dan $k$", "$k$ dan $g(-\\frac{q}{2p})$"],
+                svg: null,
+                options: ["$r$ dan $c$", "$f\\left(-\\frac{b}{2a}\\right)$ dan $g\\left(-\\frac{q}{2p}\\right)$", "$f(-b)$ dan $g(-q)$", "$f\\left(\\frac{b}{a}\\right)$ dan $k$", "$k$ dan $g\\left(-\\frac{q}{2p}\\right)$"],
                 correct: 1,
-                explanation: "Dari $\\frac{b}{a} = \\frac{q}{p} \implies -\\frac{b}{2a} = -\\frac{q}{2p}$. Artinya kedua parabola memiliki sumbu simetri yang sama.<br>" +
-                             "Jarak terdekat terjadi pada sumbu simetrinya, yaitu selisih nilai ekstrem/puncak $y_p$: $f(-\\frac{b}{2a})$ dan $g(-\\frac{q}{2p})$."
+                explanation: "Dari $\\frac{b}{a} = \\frac{q}{p} \\implies -\\frac{b}{2a} = -\\frac{q}{2p}$.<br>Artinya kedua parabola memiliki sumbu simetri yang sejajar/sama.<br>Jarak terdekat terjadi pada sumbu simetrinya, yaitu selisih nilai ekstrem puncak $y_p$: $f\\left(-\\frac{b}{2a}\\right)$ dan $g\\left(-\\frac{q}{2p}\\right)$."
             },
             {
                 id: 17,
                 source: "Soal UM UGM 2014 Kode 521",
                 text: "Suatu grafik fungsi kuadrat memotong sumbu-$x$ di $A(1,0)$ dan $B(2,0)$. Jika grafik fungsi kuadrat tersebut melalui titik $(0,4)$ dan puncaknya di titik $(p,q)$, maka $p+q = ...$",
+                svg: null,
                 options: ["1", "$\\frac{3}{2}$", "2", "$\\frac{5}{2}$", "3"],
                 correct: 0,
-                explanation: "Melalui $(1,0)$ dan $(2,0) \implies y = a(x-1)(x-2)$.<br>" +
-                             "Melalui $(0,4) \implies 4 = a(-1)(-2) \implies a = 2$.<br>" +
-                             "Fungsi: $y = 2(x^2 - 3x + 2) = 2x^2 - 6x + 4$.<br>" +
-                             "Puncak: $p = x_p = -\\frac{-6}{2(2)} = \\frac{3}{2}$.<br>" +
-                             "$q = y_p = 2(\\frac{3}{2})^2 - 6(\\frac{3}{2}) + 4 = \\frac{9}{2} - 9 + 4 = -\\frac{1}{2}$.<br>" +
-                             "$p + q = \\frac{3}{2} - \\frac{1}{2} = 1$."
+                explanation: "Melalui $(1,0)$ dan $(2,0) \\implies y = a(x-1)(x-2)$.<br>Melalui $(0,4) \\implies 4 = a(0-1)(0-2) \\implies 2a = 4 \\implies a = 2$.<br>Fungsi: $y = 2(x^2 - 3x + 2) = 2x^2 - 6x + 4$.<br><br>Koordinat puncak $(p,q)$:<br>$$p = x_p = -\\frac{-6}{2(2)} = \\frac{3}{2}$$$$q = y_p = 2\\left(\\frac{3}{2}\\right)^2 - 6\\left(\\frac{3}{2}\\right) + 4 = \\frac{9}{2} - 9 + 4 = -\\frac{1}{2}$$Maka $p + q = \\frac{3}{2} + \\left(-\\frac{1}{2}\\right) = 1$."
             },
             {
                 id: 18,
                 source: "Soal SBMPTN 2014 Kode 631",
                 text: "Jika $a>2$ maka grafik fungsi $f(x)=ax^2+2ax+2$...",
+                svg: null,
                 options: ["Berada di atas sumbu-$x$", "Berada di bawah sumbu-$x$", "Menyinggung sumbu-$x$", "Memotong sumbu-$x$ di dua titik berbeda", "Memotong sumbu-$x$ di $(x_1,0)$ dan $(x_2,0)$ dengan $x_1>0$ dan $x_2>0$"],
                 correct: 3,
-                explanation: "Cek Diskriminan: $D = (2a)^2 - 4(a)(2) = 4a^2 - 8a = 4a(a - 2)$.<br>" +
-                             "Karena $a > 2$, maka $a > 0$ dan $a - 2 > 0 \implies D > 0$.<br>" +
-                             "Karena $D > 0$, grafik <b>memotong sumbu-$x$ di dua titik berbeda</b>."
+                explanation: "Hitung Diskriminan $D$: $$D = b^2 - 4ac = (2a)^2 - 4(a)(2) = 4a^2 - 8a = 4a(a - 2)$$Karena $a > 2$, maka $a > 0$ dan $(a - 2) > 0$, sehingga $D > 0$.<br>Karena $D > 0$, grafik parabola <b>memotong sumbu-$x$ di dua titik berbeda</b>."
             },
             {
                 id: 19,
                 source: "Soal SBMPTN 2014 Kode 644",
-                text: "Jika $0<a<10$ fungsi kuadrat $f(x)=ax^2+2ax+10$ memenuhi sifat...",
+                text: "Jika $0<a<10$, fungsi kuadrat $f(x)=ax^2+2ax+10$ memenuhi sifat...",
+                svg: null,
                 options: ["Selalu negatif", "Selalu positif", "Hanya positif di setiap $x$, dengan $0<a<10$", "Hanya negatif di setiap $x$, dengan $0<a<10$", "Hanya positif di setiap $x$, dengan $x<0$ dan $x>10$"],
                 correct: 1,
-                explanation: "1) $a > 0$ (karena $0 < a < 10$).<br>" +
-                             "2) $D = (2a)^2 - 4(a)(10) = 4a^2 - 40a = 4a(a - 10) < 0$ (karena $a < 10$).<br>" +
-                             "Karena $a > 0$ dan $D < 0$, fungsi bersifat <b>Definit Positif (Selalu positif)</b>."
+                explanation: "1) Karena $0 < a < 10$, maka $a > 0$ (parabola terbuka ke atas).<br>2) Diskriminan: $$D = (2a)^2 - 4(a)(10) = 4a^2 - 40a = 4a(a - 10)$$Karena $a < 10 \\implies a - 10 < 0$, maka $D < 0$.<br>Karena $a > 0$ dan $D < 0$, fungsi bersifat <b>Definit Positif (Selalu positif)</b>."
             },
             {
                 id: 20,
                 source: "Soal SBMPTN 2014 Kode 644",
                 text: "Fungsi kuadrat $f(x)=x^2+2px+p$ memenuhi nilai minimum $-p$ dengan $p\\neq 0$. Jika sumbu simetri kurva $f$ adalah $x=a$, maka nilai $a+f(a) = ...$",
+                svg: null,
                 options: ["6", "4", "-4", "-5", "-6"],
                 correct: 2,
-                explanation: "Sumbu simetri $a = x_p = -\\frac{2p}{2} = -p$.<br>" +
-                             "Nilai minimum $y_p = -p \implies f(-p) = (-p)^2 + 2p(-p) + p = -p \implies p^2 - 2p^2 + p = -p \implies -p^2 + 2p = 0 \implies p = 2$ (karena $p \\neq 0$).<br>" +
-                             "Maka $a = -2$ dan $f(a) = y_p = -2$.<br>" +
-                             "Nilai $a + f(a) = -2 + (-2) = -4$."
+                explanation: "Sumbu simetri $a = x_p = -\\frac{2p}{2} = -p$.<br>Nilai minimum $f(a) = y_p = -p$: $$f(-p) = (-p)^2 + 2p(-p) + p = -p$$$$p^2 - 2p^2 + p = -p \\implies -p^2 + 2p = 0 \\implies p(2-p) = 0$$Karena $p \\neq 0$, diperoleh $p = 2$.<br>Maka $a = -p = -2$ dan $f(a) = -p = -2$.<br>Nilai $a + f(a) = -2 + (-2) = -4$."
             },
             {
                 id: 21,
                 source: "Soal SBMPTN 2014 Kode 613",
                 text: "Jika fungsi $f(x)=a^2x^2-12x+c^2$ menyinggung sumbu-$x$ di $x=\\frac{2}{3}$, maka $a^2-c^2 = ...$",
+                svg: null,
                 options: ["1", "2", "3", "5", "7"],
                 correct: 3,
-                explanation: "Sumbu simetri $x_p = -\\frac{-12}{2a^2} = \\frac{2}{3} \implies \\frac{6}{a^2} = \\frac{2}{3} \implies 2a^2 = 18 \implies a^2 = 9$.<br>" +
-                             "Syarat menyinggung ($D = 0$): $144 - 4(a^2)(c^2) = 0 \implies 144 - 4(9)(c^2) = 0 \implies 36c^2 = 144 \implies c^2 = 4$.<br>" +
-                             "Maka $a^2 - c^2 = 9 - 4 = 5$."
+                explanation: "Sumbu simetri $x_p = -\\frac{-12}{2a^2} = \\frac{2}{3} \\implies \\frac{6}{a^2} = \\frac{2}{3} \\implies 2a^2 = 18 \\implies a^2 = 9$.<br>Menyinggung sumbu-$x \\implies D = 0$: $$(-12)^2 - 4(a^2)(c^2) = 0 \\implies 144 - 4(9)(c^2) = 0 \\implies 36c^2 = 144 \\implies c^2 = 4$$Maka $a^2 - c^2 = 9 - 4 = 5$."
             },
             {
                 id: 22,
                 source: "Soal SBMPTN 2013 Kode 128",
                 text: "Parabola $y=x^2-2x+m+2$ mempunyai titik puncak $(p,q)$. Jika $3p$ dan $q$ dua suku pertama deret geometri tak hingga yang mempunyai jumlah 9, maka nilai $m$ adalah...",
+                svg: null,
                 options: ["-3", "-1", "1", "2", "3"],
                 correct: 2,
-                explanation: "Puncak parabola: $p = x_p = 1$, $q = y_p = 1^2 - 2(1) + m + 2 = m + 1$.<br>" +
-                             "Suku deret geometri: $a = 3p = 3$, $U_2 = q = m+1 \implies r = \\frac{m+1}{3}$.<br>" +
-                             "Jumlah tak hingga $S_{\\infty} = \\frac{a}{1-r} = 9 \implies \\frac{3}{1 - \\frac{m+1}{3}} = 9 \implies 1 - \\frac{m+1}{3} = \\frac{1}{3} \implies \\frac{m+1}{3} = \\frac{2}{3} \implies m = 1$."
+                explanation: "Puncak parabola: $$p = x_p = 1, \\quad q = y_p = 1^2 - 2(1) + m + 2 = m + 1$$Deret geometri tak hingga: suku pertama $a = 3p = 3$, suku kedua $U_2 = q = m+1 \\implies r = \\frac{m+1}{3}$.<br>Jumlah tak hingga $S_{\\infty} = \\frac{a}{1-r} = 9$: $$\\frac{3}{1 - \\frac{m+1}{3}} = 9 \\implies 1 - \\frac{m+1}{3} = \\frac{1}{3} \\implies \\frac{m+1}{3} = \\frac{2}{3} \\implies m = 1$$"
             },
             {
                 id: 23,
                 source: "Soal SBMPTN 2013 Kode 126",
                 text: "Parabola $y=x^2-2x+3m-1$ mempunyai titik puncak $(p,q)$. Jika $2p$ dan $\\frac{q}{4}$ dua suku pertama deret geometri tak hingga yang mempunyai jumlah 4, maka nilai $m$ adalah...",
+                svg: null,
                 options: ["$-\\frac{3}{2}$", "$\\frac{2}{3}$", "1", "2", "3"],
-                correct: 2,
-                explanation: "Puncak: $p = 1$, $q = 1^2 - 2(1) + 3m - 1 = 3m - 2$.<br>" +
-                             "Deret geometri: $a = 2(1) = 2$, $U_2 = \\frac{3m-2}{4} \implies r = \\frac{3m-2}{8}$.<br>" +
-                             "$S_{\\infty} = \\frac{2}{1 - r} = 4 \implies 1 - r = \\frac{1}{2} \implies r = \\frac{1}{2}$.<br>" +
-                             "$\\frac{3m-2}{8} = \\frac{1}{2} \implies 3m - 2 = 4 \implies 3m = 6 \implies m = 2$ (opsi kunci C disesuaikan pengerjaan $m=1$ pada teks PDF)."
+                correct: 3,
+                explanation: "Puncak parabola: $$p = 1, \\quad q = 1^2 - 2(1) + 3m - 1 = 3m - 2$$Deret geometri: $a = 2(1) = 2$, rasio $r = \\frac{q/4}{2} = \\frac{3m-2}{8}$.<br>Jumlah tak hingga $S_{\\infty} = 4$: $$\\frac{2}{1 - r} = 4 \\implies 1 - r = \\frac{1}{2} \\implies r = \\frac{1}{2}$$$$\\frac{3m-2}{8} = \\frac{1}{2} \\implies 3m - 2 = 4 \\implies 3m = 6 \\implies m = 2$$"
             },
             {
                 id: 24,
                 source: "Soal UM STIS 2011",
                 text: "Dari fungsi kuadrat $y=f(x)$ diketahui bahwa fungsi $y=f(x+a)$ mencapai nilai maksimum untuk $x=p$. Dapat ditarik kesimpulan bahwa fungsi $y=f(x-a)$ mencapai maksimum untuk...",
+                svg: null,
                 options: ["$x=p-a$", "$x=p+a$", "$x=p-2a$", "$x=p+2a$", "$x=2a-p$"],
                 correct: 3,
-                explanation: "Grafik $y = f(x+a)$ adalah pergeseran $f(x)$ sejauh $a$ ke kiri. Maksimum di $x=p \implies$ puncak asli $f(x)$ ada di $x = p + a$.<br>" +
-                             "Grafik $y = f(x-a)$ adalah pergeseran $f(x)$ sejauh $a$ ke kanan $\implies$ puncak baru ada di $x = (p + a) + a = p + 2a$."
+                explanation: "Grafik $y = f(x+a)$ adalah pergeseran $f(x)$ sejauh $a$ ke kiri. Maksimum di $x=p \\implies$ puncak asli $f(x)$ ada di $x = p + a$.<br>Grafik $y = f(x-a)$ adalah pergeseran $f(x)$ sejauh $a$ ke kanan $\\implies$ puncak baru ada di $x = (p + a) + a = p + 2a$."
             },
             {
                 id: 25,
                 source: "Soal UM STIS 2011",
                 text: "Titik potong parabola $y=mx^2+x+m$, $m\\neq 0$ dengan garis $y=(m+1)x+1$ adalah $(x_1,y_1)$ dan $(x_2,y_2)$. Jika $x_1^2+x_2^2=1$, nilai $m$ adalah...",
+                svg: null,
                 options: ["-2", "-1", "0", "1", "2"],
                 correct: 3,
-                explanation: "Persamaan persekutuan: $mx^2 + x + m = (m+1)x + 1 \implies mx^2 - mx + (m-1) = 0$.<br>" +
-                             "$x_1 + x_2 = \\frac{m}{m} = 1$ dan $x_1 x_2 = \\frac{m-1}{m}$.<br>" +
-                             "$x_1^2 + x_2^2 = (x_1 + x_2)^2 - 2x_1 x_2 = 1 \implies 1^2 - 2\\left(\\frac{m-1}{m}\\right) = 1 \implies \\frac{2m-2}{m} = 0 \implies m = 1$."
+                explanation: "Persamaan persekutuan: $$mx^2 + x + m = (m+1)x + 1 \\implies mx^2 - mx + (m-1) = 0$$Sifat akar: $x_1 + x_2 = 1$ dan $x_1 x_2 = \\frac{m-1}{m}$.<br>$$x_1^2 + x_2^2 = (x_1 + x_2)^2 - 2x_1 x_2 = 1$$$$1^2 - 2\\left(\\frac{m-1}{m}\\right) = 1 \\implies \\frac{2m-2}{m} = 0 \\implies 2m - 2 = 0 \\implies m = 1$$"
             },
             {
                 id: 26,
                 source: "Soal UNBK SMA IPA 2019",
-                text: "Perhatikan gambar grafik berikut.<br>Jika grafik fungsi $f(x)=ax^2+bx+c$ seperti pada gambar, nilai $a, b,$ dan $c$ yang memenuhi adalah...",
-                svg: `<svg width="240" height="180" viewBox="-4 -1 8 6">
-                        <line x1="-4" y1="0" x2="4" y2="0" stroke="#94a3b8" stroke-width="0.05"/>
-                        <line x1="0" y1="-1" x2="0" y2="5" stroke="#94a3b8" stroke-width="0.05"/>
-                        <path d="M -3.5 5 Q -1.5 -0.5 1.5 5" fill="none" stroke="#2563eb" stroke-width="0.1"/>
-                        <circle cx="0" cy="1.5" r="0.15" fill="#16a34a"/>
-                        <text x="0.2" y="1.5" font-size="0.4" fill="#1e293b">c > 0</text>
+                text: "Jika grafik fungsi $f(x)=ax^2+bx+c$ seperti pada gambar di bawah ini, nilai $a, b,$ dan $c$ yang memenuhi adalah...",
+                svg: `<svg viewBox="0 0 320 220" class="w-full max-w-xs bg-slate-50 rounded-xl border border-slate-200 shadow-inner">
+                        <line x1="40" y1="0" x2="40" y2="220" stroke="#475569" stroke-width="2"/>
+                        <line x1="0" y1="170" x2="320" y2="170" stroke="#475569" stroke-width="2"/>
+                        <polygon points="40,2 35,12 45,12" fill="#475569"/>
+                        <polygon points="318,170 308,165 308,175" fill="#475569"/>
+                        <text x="305" y="160" font-size="12" font-weight="bold" fill="#334155">X</text>
+                        <text x="50" y="15" font-size="12" font-weight="bold" fill="#334155">Y</text>
+                        <!-- Parabola Terbuka ke atas, puncak di kuadran III (x < 0), memotong Y positif -->
+                        <path d="M 10 20 Q 90 280 280 20" fill="none" stroke="#2563eb" stroke-width="3"/>
+                        <circle cx="40" cy="115" r="5" fill="#16a34a"/>
+                        <text x="50" y="115" font-size="12" font-weight="bold" fill="#15803d">(0,c) -> c > 0</text>
                       </svg>`,
                 options: ["$a>0, b>0$, dan $c>0$", "$a<0, b>0$, dan $c>0$", "$a<0, b>0$, dan $c<0$", "$a>0, b<0$, dan $c>0$", "$a<0, b<0$, dan $c<0$"],
                 correct: 0,
-                explanation: "1) Parabola terbuka ke atas $\implies a > 0$.<br>" +
-                             "2) Memotong sumbu-$y$ positif $\implies c > 0$.<br>" +
-                             "3) Titik puncak di sebelah kiri sumbu-$y \implies x_p = -\\frac{b}{2a} < 0$. Karena $a > 0$, maka $b > 0$.<br>" +
-                             "Kesimpulan: $a > 0, b > 0, c > 0$."
+                explanation: "1) Parabola terbuka ke atas $\\implies a > 0$.<br>2) Memotong sumbu-$y$ di atas sumbu-$x \\implies c > 0$.<br>3) Titik puncak berada di sebelah kiri sumbu-$y \\implies x_p = -\\frac{b}{2a} < 0$. Karena $a > 0$, maka $b > 0$.<br>Kesimpulan: $a > 0, b > 0, c > 0$."
             },
             {
                 id: 27,
                 source: "Soal UNBK SMA IPS 2019",
                 text: "Persamaan grafik fungsi kuadrat pada gambar di bawah ini adalah...",
-                svg: `<svg width="240" height="200" viewBox="-2 -8 5 9">
-                        <line x1="-2" y1="0" x2="3" y2="0" stroke="#94a3b8" stroke-width="0.1"/>
-                        <line x1="0" y1="-8" x2="0" y2="1" stroke="#94a3b8" stroke-width="0.1"/>
-                        <path d="M -1.2 0 Q 1 -8 3.2 0" fill="none" stroke="#2563eb" stroke-width="0.15"/>
-                        <circle cx="0" cy="-6" r="0.2" fill="#dc2626"/><text x="0.2" y="-5.5" font-size="0.6">(0,-6)</text>
-                        <circle cx="2" cy="-6" r="0.2" fill="#dc2626"/><text x="1.2" y="-5.5" font-size="0.6">(2,-6)</text>
-                        <circle cx="1" cy="-7" r="0.2" fill="#16a34a"/><text x="1.2" y="-7" font-size="0.6">(1,-7)</text>
+                svg: `<svg viewBox="0 0 320 220" class="w-full max-w-xs bg-slate-50 rounded-xl border border-slate-200 shadow-inner">
+                        <line x1="80" y1="0" x2="80" y2="220" stroke="#475569" stroke-width="2"/>
+                        <line x1="0" y1="40" x2="320" y2="40" stroke="#475569" stroke-width="2"/>
+                        <polygon points="80,2 75,12 85,12" fill="#475569"/>
+                        <polygon points="318,40 308,35 308,45" fill="#475569"/>
+                        <text x="305" y="30" font-size="12" font-weight="bold" fill="#334155">X</text>
+                        <text x="90" y="15" font-size="12" font-weight="bold" fill="#334155">Y</text>
+                        <!-- Parabola y = x^2 - 2x - 6 -> Puncak (1,-7), melalui (0,-6) dan (2,-6) -->
+                        <path d="M 10 20 Q 140 280 270 20" fill="none" stroke="#2563eb" stroke-width="3"/>
+                        <circle cx="80" cy="140" r="5" fill="#dc2626"/>
+                        <text x="15" y="145" font-size="11" font-weight="bold" fill="#b91c1c">(0,-6)</text>
+                        <circle cx="200" cy="140" r="5" fill="#dc2626"/>
+                        <text x="210" y="145" font-size="11" font-weight="bold" fill="#b91c1c">(2,-6)</text>
+                        <circle cx="140" cy="160" r="5" fill="#16a34a"/>
+                        <text x="125" y="180" font-size="12" font-weight="bold" fill="#15803d">(1,-7)</text>
                       </svg>`,
                 options: ["$y=x^2-x-6$", "$y=2x^2+x-6$", "$y=x^2-2x-6$", "$y=x^2+2x-6$", "$y=x^2-4x-6$"],
                 correct: 2,
-                explanation: "Puncak $(1,-7)$ dan melalui $(0,-6)$.<br>" +
-                             "$y = a(x-1)^2 - 7 \implies -6 = a(0-1)^2 - 7 \implies a = 1$.<br>" +
-                             "$y = 1(x-1)^2 - 7 = x^2 - 2x + 1 - 7 = x^2 - 2x - 6$."
+                explanation: "Puncak parabola $(x_p,y_p) = (1,-7)$ dan melalui $(0,-6)$.<br>Gunakan bentuk puncak: $$y = a(x-1)^2 - 7$$Substitusi $(0,-6) \\implies -6 = a(0-1)^2 - 7 \\implies a = 1$.<br>Persamaan parabola: $$y = 1(x-1)^2 - 7 = x^2 - 2x + 1 - 7 = x^2 - 2x - 6$$"
             },
             {
                 id: 28,
                 source: "Soal SIMAK UI 2019 Kode 539",
                 text: "Diketahui kurva $f(x)=px^2+(p+2)x+(p+q-1)$ memotong sumbu-$y$ di titik $P(0,-1)$ dan memotong sumbu-$x$ di titik $Q$ dan $R$. Jika absis titik tengah $QR$ adalah $\\frac{3}{2}$, titik puncak kurva tersebut adalah...",
+                svg: null,
                 options: ["$(\\frac{3}{2}, \\frac{1}{8})$", "$(\\frac{3}{2}, \\frac{3}{8})$", "$(\\frac{3}{2}, \\frac{5}{8})$", "$(\\frac{3}{2}, \\frac{7}{8})$", "$(\\frac{3}{2}, -\\frac{1}{8})$"],
                 correct: 0,
-                explanation: "1) Memotong sumbu-$y$ di $(0,-1) \implies p+q-1 = -1 \implies p+q = 0 \implies q = -p$.<br>" +
-                             "2) Sumbu simetri $x_p = \\frac{3}{2} \implies -\\frac{p+2}{2p} = \\frac{3}{2} \implies -p - 2 = 3p \implies 4p = -2 \implies p = -\\frac{1}{2}$.<br>" +
-                             "Fungsi: $f(x) = -\\frac{1}{2}x^2 + \\frac{3}{2}x - 1$.<br>" +
-                             "Ordinat puncak $y_p = f(\\frac{3}{2}) = -\\frac{1}{2}(\\frac{9}{4}) + \\frac{3}{2}(\\frac{3}{2}) - 1 = -\\frac{9}{8} + \\frac{18}{8} - \\frac{8}{8} = \\frac{1}{8}$.<br>" +
-                             "Titik puncak: $(\\frac{3}{2}, \\frac{1}{8})$."
+                explanation: "1) Memotong sumbu-$y$ di $(0,-1) \\implies p+q-1 = -1 \\implies p+q = 0$.<br>2) Absis titik tengah $QR$ adalah sumbu simetri $x_p = \\frac{3}{2}$: $$-\\frac{p+2}{2p} = \\frac{3}{2} \\implies -p - 2 = 3p \\implies 4p = -2 \\implies p = -\\frac{1}{2}$$Fungsi kuadrat: $f(x) = -\\frac{1}{2}x^2 + \\frac{3}{2}x - 1$.<br>Ordinat puncak $y_p = f\\left(\\frac{3}{2}\\right)$: $$y_p = -\\frac{1}{2}\\left(\\frac{3}{2}\\right)^2 + \\frac{3}{2}\\left(\\frac{3}{2}\\right) - 1 = -\\frac{9}{8} + \\frac{9}{4} - 1 = \\frac{1}{8}$$Titik puncak adalah $\\left(\\frac{3}{2}, \\frac{1}{8}\\right)$."
             },
             {
                 id: 29,
                 source: "Soal UM UGM 2019 Kode 634",
                 text: "Diberikan fungsi kuadrat $f(x)=9x^2+ax-b$ yang melalui titik $(a,-b)$ dan $(b,-a)$ dengan $a\\neq b$. Nilai minimum $f(x)$ adalah...",
+                svg: null,
                 options: ["9", "3", "$-\\frac{1}{9}$", "$-\\frac{1}{3}$", "-1"],
                 correct: 2,
-                explanation: " Melalui $(a,-b) \implies -b = 9a^2 + a^2 - b \implies 10a^2 = 0 \implies a = 0$.<br>" +
-                             "Melalui $(b,-a) \implies 0 = 9b^2 + 0 - b \implies b(9b - 1) = 0 \implies b = \\frac{1}{9}$.<br>" +
-                             "Fungsi: $f(x) = 9x^2 - \\frac{1}{9}$.<br>" +
-                             "Nilai minimum terjadi saat $x = 0 \implies y_{min} = -\\frac{1}{9}$."
+                explanation: "Melalui $(a,-b) \\implies -b = 9a^2 + a^2 - b \\implies 10a^2 = 0 \\implies a = 0$.<br>Melalui $(b,-a) \\implies 0 = 9b^2 + 0 - b \\implies b(9b - 1) = 0 \\implies b = \\frac{1}{9}$ (karena $b \\neq a$).<br>Fungsi kuadrat: $f(x) = 9x^2 - \\frac{1}{9}$.<br>Nilai minimum terjadi saat $x = 0 \\implies y_{min} = -\\frac{1}{9}$."
             },
             {
                 id: 30,
                 source: "Soal UTBK-SBMPTN 2019",
                 text: "Diketahui grafik fungsi kuadrat $f$ memotong garis $y=4$ di titik $(1,4)$ dan $(5,4)$. Jika grafik fungsi $f$ menyinggung sumbu-$x$, maka grafik fungsi $f$ memotong garis $x=2$ di...",
+                svg: null,
                 options: ["$(2,-2)$", "$(2,-1)$", "$(2,0)$", "$(2,1)$", "$(2,2)$"],
                 correct: 3,
-                explanation: "Sumbu simetri $x_p = \\frac{1+5}{2} = 3$. Menyinggung sumbu-$x \implies y_p = 0$. Puncak $(3,0)$.<br>" +
-                             "Bentuk fungsi $f(x) = a(x-3)^2 + 0$.<br>" +
-                             "Melalui $(1,4) \implies 4 = a(1-3)^2 \implies 4a = 4 \implies a = 1$.<br>" +
-                             "$f(x) = (x-3)^2$. Saat $x=2 \implies y = (2-3)^2 = 1$. Titik potong $(2,1)$."
+                explanation: "Sumbu simetri $x_p = \\frac{1+5}{2} = 3$. Menyinggung sumbu-$x \\implies y_p = 0$. Puncak di $(3,0)$.<br>Bentuk fungsi $f(x) = a(x-3)^2 + 0$.<br>Melalui $(1,4) \\implies 4 = a(1-3)^2 \\implies 4a = 4 \\implies a = 1$.<br>Fungsi: $f(x) = (x-3)^2$. Saat $x = 2 \\implies y = (2-3)^2 = 1$. Titik potong adalah $(2,1)$."
             },
             {
                 id: 31,
                 source: "Soal UTBK-SBMPTN 2019",
                 text: "Diketahui grafik fungsi kuadrat $f$ mempunyai sumbu simetri $x=4$. Jika grafik fungsi $f$ melalui titik $(2,0)$ dan $(0,3)$, maka ordinat titik puncak grafik fungsi $f$ adalah...",
+                svg: null,
                 options: ["2", "1", "0", "-1", "-2"],
                 correct: 3,
-                explanation: "Puncak $(4, y_p) \implies y = a(x-4)^2 + y_p$.<br>" +
-                             "1) Melalui $(2,0) \implies 0 = a(2-4)^2 + y_p \implies 4a + y_p = 0$.<br>" +
-                             "2) Melalui $(0,3) \implies 3 = a(0-4)^2 + y_p \implies 16a + y_p = 3$.<br>" +
-                             "Kurangkan persamaan: $12a = 3 \implies a = \\frac{1}{4}$.<br>" +
-                             "Maka $y_p = -4a = -4(\\frac{1}{4}) = -1$."
+                explanation: "Bentuk fungsi kuadrat dengan sumbu simetri $x_p = 4$: $$f(x) = a(x-4)^2 + y_p$$1) Melalui $(2,0) \\implies 0 = a(2-4)^2 + y_p \\implies 4a + y_p = 0$.<br>2) Melalui $(0,3) \\implies 3 = a(0-4)^2 + y_p \\implies 16a + y_p = 3$.<br>Kurangkan kedua persamaan: $$12a = 3 \\implies a = \\frac{1}{4}$$Maka $y_p = -4a = -4\\left(\\frac{1}{4}\\right) = -1$."
             },
             {
                 id: 32,
                 source: "Soal UM UNDIP 2019 Kode 324",
-                text: "Diberikan fungsi kuadrat $f(x)=x^2+ax+b$ dengan $a$ dan $b$ konstanta real. Jika $f(-1)=2$ dan $f(2)=-1$ maka nilai minimum untuk fungsi $f$ adalah...",
+                text: "Diberikan fungsi kuadrat $f(x)=x^2+ax+b$ dengan $a$ dan $b$ konstanta real. Jika $f(-1)=2$ dan $f(2)=-1$, maka nilai minimum untuk fungsi $f$ adalah...",
+                svg: null,
                 options: ["-3", "-2", "2", "3", "4"],
                 correct: 1,
-                explanation: "$f(-1) = 1 - a + b = 2 \implies -a + b = 1$.<br>" +
-                             "$f(2) = 4 + 2a + b = -1 \implies 2a + b = -5$.<br>" +
-                             "Kurangkan: $-3a = 6 \implies a = -2 \implies b = -1$.<br>" +
-                             "$f(x) = x^2 - 2x - 1 = (x-1)^2 - 2$. Nilai minimum $= -2$."
+                explanation: "$f(-1) = (-1)^2 + a(-1) + b = 2 \\implies -a + b = 1$.<br>$f(2) = 2^2 + a(2) + b = -1 \\implies 2a + b = -5$.<br>Eliminasi kedua persamaan: $$-3a = 6 \\implies a = -2 \\implies b = -1$$Fungsi kuadrat: $f(x) = x^2 - 2x - 1 = (x-1)^2 - 2$.<br>Nilai minimum fungsi kuadrat adalah $-2$."
             },
             {
                 id: 33,
                 source: "Soal TPS UTBK SBMPTN 2022",
-                text: "Jika kurva $y=f(x)$ diperoleh dari menggeser kurva $g(x)=x^2-9$ sejauh 5 satuan ke kanan dan 8 satuan ke atas, manakah pernyataan berikut yang benar?<br>(1) Titik puncak kurva $f(x)$ di $(5,-1)$<br>(2) Garis $y=-1$ menyinggung kurva $y=f(x)$<br>(3) Diskriminan persamaan $f(x)=0$ lebih besar daripada 0<br>(4) $f(1)=-8$",
+                text: "Jika kurva $y=f(x)$ diperoleh dari menggeser kurva $g(x)=x^2-9$ sejauh 5 satuan ke kanan dan 8 satuan ke atas, manakah pernyataan berikut yang benar?<br><br>(1) Titik puncak kurva $f(x)$ di $(5,-1)$<br>(2) Garis $y=-1$ menyinggung kurva $y=f(x)$<br>(3) Diskriminan persamaan $f(x)=0$ lebih besar daripada 0<br>(4) $f(1)=-8$",
+                svg: null,
                 options: ["(1), (2), dan (3) SAJA yang benar", "(1) dan (3) SAJA yang benar", "(2) dan (4) SAJA yang benar", "HANYA (4) yang benar", "SEMUA pilihan benar"],
                 correct: 0,
-                explanation: "Pergeseran: $y - 8 = (x-5)^2 - 9 \implies y = x^2 - 10x + 25 - 9 + 8 \implies y = x^2 - 10x + 24$.<br>" +
-                             "1) Puncak: $x_p = 5, y_p = 5^2 - 10(5) + 24 = -1 \implies (5,-1)$ (BENAR).<br>" +
-                             "2) Garis $y = -1$ menyinggung tepat di puncak $(5,-1)$ (BENAR).<br>" +
-                             "3) $D = (-10)^2 - 4(1)(24) = 4 > 0$ (BENAR).<br>" +
-                             "4) $f(1) = 1 - 10 + 24 = 15 \\neq -8$ (SALAH).<br>" +
-                             "Pernyataan (1), (2), dan (3) benar."
+                explanation: "Pergeseran: $y - 8 = (x-5)^2 - 9 \\implies y = x^2 - 10x + 24$.<br>1) Puncak: $x_p = 5, y_p = 5^2 - 10(5) + 24 = -1 \\implies (5,-1)$ (BENAR).<br>2) Garis $y = -1$ menyinggung tepat di titik puncak $(5,-1)$ (BENAR).<br>3) $D = (-10)^2 - 4(1)(24) = 4 > 0$ (BENAR).<br>4) $f(1) = 1 - 10 + 24 = 15 \\neq -8$ (SALAH).<br>Pernyataan (1), (2), dan (3) SAJA yang benar."
             },
             {
                 id: 34,
                 source: "Soal TPS UTBK SBMPTN 2022",
-                text: "Jika kurva $y=f(x)$ diperoleh dari menggeser kurva $g(x)=1-x^2$ sejauh 3 satuan ke atas dan 1 satuan ke kanan, manakah pernyataan berikut yang benar?<br>(1) Titik $(3,0)$ terletak pada kurva $y=f(x)$<br>(2) Kurva $y=f(x)$ memotong sumbu-$y$ di titik $(0,3)$<br>(3) Kurva $y=f(x)$ mempunyai titik puncak $(1,4)$<br>(4) Kurva $y=f(x)$ memotong sumbu-$x$ di dua titik berbeda",
+                text: "Jika kurva $y=f(x)$ diperoleh dari menggeser kurva $g(x)=1-x^2$ sejauh 3 satuan ke atas dan 1 satuan ke kanan, manakah pernyataan berikut yang benar?<br><br>(1) Titik $(3,0)$ terletak pada kurva $y=f(x)$<br>(2) Kurva $y=f(x)$ memotong sumbu-$y$ di titik $(0,3)$<br>(3) Kurva $y=f(x)$ mempunyai titik puncak $(1,4)$<br>(4) Kurva $y=f(x)$ memotong sumbu-$x$ di dua titik berbeda",
+                svg: null,
                 options: ["(1), (2), dan (3) SAJA yang benar", "(1) dan (3) SAJA yang benar", "(2) dan (4) SAJA yang benar", "HANYA (4) yang benar", "SEMUA pilihan benar"],
                 correct: 4,
-                explanation: "Pergeseran: $y - 3 = 1 - (x-1)^2 \implies y = -x^2 + 2x + 3$.<br>" +
-                             "1) $f(3) = -(9) + 6 + 3 = 0 \implies (3,0)$ (BENAR).<br>" +
-                             "2) Memotong sumbu-$y$ saat $x=0 \implies y = 3 \implies (0,3)$ (BENAR).<br>" +
-                             "3) Puncak $x_p = 1, y_p = 4 \implies (1,4)$ (BENAR).<br>" +
-                             "4) $D = 2^2 - 4(-1)(3) = 16 > 0$ (BENAR).<br>" +
-                             "SEMUA pilihan benar."
+                explanation: "Pergeseran: $y - 3 = 1 - (x-1)^2 \\implies y = -x^2 + 2x + 3$.<br>1) $f(3) = -(3)^2 + 2(3) + 3 = 0 \\implies (3,0)$ (BENAR).<br>2) Memotong sumbu-$y$ saat $x=0 \\implies y = 3 \\implies (0,3)$ (BENAR).<br>3) Puncak $x_p = 1, y_p = 4 \\implies (1,4)$ (BENAR).<br>4) $D = 2^2 - 4(-1)(3) = 16 > 0$ (BENAR).<br>SEMUA pilihan benar."
             },
             {
                 id: 35,
                 source: "Soal TPS UTBK SBMPTN 2022",
-                text: "Jika kurva $g(x)=x^2+2$ digeser sejauh 4 satuan ke kiri dan 2 satuan ke bawah, diperoleh kurva $y=f(x)$. Manakah pernyataan berikut yang benar?<br>(1) Kurva $y=f(x)$ menyinggung sumbu-$x$<br>(2) Kurva $y=f(x)$ mempunyai sumbu simetri $x=-4$<br>(3) Kurva $y=f(x)$ memotong sumbu-$y$ di titik $(0,16)$<br>(4) Titik $(2,6)$ terletak pada kurva $y=f(x)$",
+                text: "Jika kurva $g(x)=x^2+2$ digeser sejauh 4 satuan ke kiri dan 2 satuan ke bawah, diperoleh kurva $y=f(x)$. Manakah pernyataan berikut yang benar?<br><br>(1) Kurva $y=f(x)$ menyinggung sumbu-$x$<br>(2) Kurva $y=f(x)$ mempunyai sumbu simetri $x=-4$<br>(3) Kurva $y=f(x)$ memotong sumbu-$y$ di titik $(0,16)$<br>(4) Titik $(2,6)$ terletak pada kurva $y=f(x)$",
+                svg: null,
                 options: ["(1), (2), dan (3) SAJA yang benar", "(1) dan (3) SAJA yang benar", "(2) dan (4) SAJA yang benar", "HANYA (4) yang benar", "SEMUA pilihan benar"],
                 correct: 0,
-                explanation: "Pergeseran: $y + 2 = (x+4)^2 + 2 \implies y = (x+4)^2 = x^2 + 8x + 16$.<br>" +
-                             "1) $D = 8^2 - 4(1)(16) = 0 \implies$ menyinggung sumbu-$x$ (BENAR).<br>" +
-                             "2) Sumbu simetri $x = -4$ (BENAR).<br>" +
-                             "3) Memotong sumbu-$y$ saat $x=0 \implies y = 16 \implies (0,16)$ (BENAR).<br>" +
-                             "4) $f(2) = (2+4)^2 = 36 \\neq 6$ (SALAH).<br>" +
-                             "Pernyataan (1), (2), dan (3) SAJA yang benar."
+                explanation: "Pergeseran: $y + 2 = (x+4)^2 + 2 \\implies y = (x+4)^2 = x^2 + 8x + 16$.<br>1) $D = 8^2 - 4(1)(16) = 0 \\implies$ menyinggung sumbu-$x$ (BENAR).<br>2) Sumbu simetri $x = -4$ (BENAR).<br>3) Memotong sumbu-$y$ saat $x=0 \\implies y = 16 \\implies (0,16)$ (BENAR).<br>4) $f(2) = (2+4)^2 = 36 \\neq 6$ (SALAH).<br>Pernyataan (1), (2), dan (3) SAJA yang benar."
             },
             {
                 id: 36,
                 source: "Soal Latihan Matematika",
                 text: "Diketahui ordinat titik puncak fungsi kuadrat $f(x)=ax^2+bx+c$ adalah 2. Jika $f(2)=f(4)=0$, maka $a+b+c = ...$",
+                svg: null,
                 options: ["-10", "-6", "-4", "4", "6"],
                 correct: 1,
-                explanation: "Soal ini identik dengan Soal Nomor 9.<br>" +
-                             "Puncak $(3,2)$ dan memotong sumbu-$x$ di $x=2$ dan $x=4$.<br>" +
-                             "Fungsi: $y = -2x^2 + 12x - 16 \implies a=-2, b=12, c=-16$.<br>" +
-                             "$a + b + c = -2 + 12 - 16 = -6$."
+                explanation: "Puncak parabola di $(3,2)$ dan memotong sumbu-$x$ di $x=2$ dan $x=4$.<br>Bentuk puncak: $y = a(x-3)^2 + 2$. Substitusi $(2,0) \\implies a = -2$.<br>Fungsi: $f(x) = -2(x-3)^2 + 2 = -2x^2 + 12x - 16$.<br>Diperoleh $a = -2, b = 12, c = -16$. Maka $a + b + c = -6$."
             },
             {
                 id: 37,
                 source: "Soal Simulasi TPS UTBK SNBT 2024",
                 text: "Nilai minimum fungsi kuadrat $f$ adalah -8 dan grafik fungsi tersebut melalui titik $(-1,0)$ dan titik $(3,0)$. Grafik fungsi tersebut juga melalui titik $(4,b)$ dengan $b = ...$",
+                svg: null,
                 options: ["42", "21", "10", "5", "0"],
                 correct: 2,
-                explanation: "Titik potong sumbu-$x$ di $(-1,0)$ dan $(3,0) \implies x_p = \\frac{-1+3}{2} = 1$. Puncak $(1,-8)$.<br>" +
-                             "Bentuk fungsi: $y = a(x+1)(x-3)$.<br>" +
-                             "Melalui $(1,-8) \implies -8 = a(1+1)(1-3) \implies -8 = -4a \implies a = 2$.<br>" +
-                             "$f(x) = 2(x+1)(x-3)$.<br>" +
-                             "Melalui $(4,b) \implies b = 2(4+1)(4-3) = 2(5)(1) = 10$."
+                explanation: "Memotong sumbu-$x$ di $(-1,0)$ dan $(3,0) \\implies x_p = \\frac{-1+3}{2} = 1$. Puncak $(1,-8)$.<br>Bentuk fungsi: $y = a(x+1)(x-3)$.<br>Substitusi $(1,-8) \\implies -8 = a(2)(-2) \\implies -4a = -8 \\implies a = 2$.<br>Fungsi kuadrat: $f(x) = 2(x+1)(x-3)$.<br>Melalui titik $(4,b) \\implies b = f(4) = 2(4+1)(4-3) = 2(5)(1) = 10$."
             },
             {
                 id: 38,
                 source: "Contoh Soal TKA Matematika SMA",
-                text: "Fungsi didefinisikan oleh $f(x)=4(x^2-8x+12)$. Manakah urutan kebenaran (Benar/Salah) untuk pernyataan berikut?<br>1. Grafik fungsi $f(x)$ terbuka ke atas.<br>2. Grafik fungsi $f(x)$ memotong garis $y=-18$.<br>3. Grafik fungsi $f(x)$ tidak melalui kuadran tiga.",
+                text: "Fungsi didefinisikan oleh $f(x)=4(x^2-8x+12)$. Manakah urutan kebenaran (Benar/Salah) untuk pernyataan berikut?<br><br>1. Grafik fungsi $f(x)$ terbuka ke atas.<br>2. Grafik fungsi $f(x)$ memotong garis $y=-18$.<br>3. Grafik fungsi $f(x)$ tidak melalui kuadran tiga.",
+                svg: null,
                 options: ["Benar, Benar, Benar", "Benar, Salah, Benar", "Salah, Benar, Salah", "Benar, Salah, Salah", "Salah, Salah, Benar"],
                 correct: 1,
-                explanation: "1) $a = 4 > 0 \implies$ terbuka ke atas (BENAR).<br>" +
-                             "2) $f(x) = 4(x-4)^2 - 16$. Nilai minimum $y_{min} = -16$. Karena $-18 < -16$, grafik tidak mungkin memotong $y = -18$ (SALAH).<br>" +
-                             "3) Titik potong sumbu-$y$ adalah $(0,48)$ positif. Grafik tidak pernah masuk ke Kuadran III (BENAR).<br>" +
-                             "Urutan: <b>Benar, Salah, Benar</b>."
+                explanation: "1) Nilai $a = 4 > 0 \\implies$ terbuka ke atas (BENAR).<br>2) $f(x) = 4(x-4)^2 - 16$. Nilai minimum $y_{min} = -16$. Karena $-18 < -16$, grafik tidak pernah mencapai $y = -18$ (SALAH).<br>3) Titik potong sumbu-$y$ adalah $(0,48)$. Karena puncak ada di $(4,-16)$ kuadran IV, grafik tidak pernah melewati kuadran III (BENAR).<br>Urutan kebenaran: <b>Benar, Salah, Benar</b>."
             }
         ];
 
-        // App State Management
         let currentIndex = 0;
-        let userAnswers = {}; // { questionIndex: selectedOptionIndex }
-        let timeRemaining = 110 * 60; // 110 minutes in seconds
+        let userAnswers = {};
 
-        // Initialize App
         window.onload = function() {
             loadSavedState();
             renderNavGrid();
             loadQuestion(currentIndex);
-            startTimer();
         };
 
         function loadSavedState() {
             const savedAnswers = localStorage.getItem('defantri_quiz_answers');
             if (savedAnswers) userAnswers = JSON.parse(savedAnswers);
-
-            const savedTime = localStorage.getItem('defantri_quiz_time');
-            if (savedTime) timeRemaining = parseInt(savedTime);
         }
 
         function saveState() {
             localStorage.setItem('defantri_quiz_answers', JSON.stringify(userAnswers));
-            localStorage.setItem('defantri_quiz_time', timeRemaining.toString());
         }
 
         function renderNavGrid() {
@@ -755,7 +551,7 @@
             navGrid.innerHTML = '';
             questionsData.forEach((q, idx) => {
                 const btn = document.createElement('button');
-                btn.className = 'nav-btn';
+                btn.className = 'nav-btn h-10 border border-slate-200 bg-slate-100 text-slate-700 rounded-lg font-semibold text-xs hover:bg-slate-200 transition';
                 btn.id = `nav-btn-${idx}`;
                 btn.innerText = idx + 1;
                 
@@ -778,20 +574,22 @@
 
             document.getElementById('q-number').innerText = `Soal Nomor ${q.id} / 38`;
             document.getElementById('q-source').innerText = q.source;
-            document.getElementById('q-text').innerHTML = q.text;
+            
+            // Render text with Markdown Bold support & KaTeX
+            document.getElementById('q-text').innerHTML = formatText(q.text);
 
-            // Render SVG/Image
+            // Graphic / SVG
             const imgContainer = document.getElementById('q-image');
             imgContainer.innerHTML = q.svg ? q.svg : '';
 
-            // Render Options
+            // Options
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
 
             const prefixes = ['A', 'B', 'C', 'D', 'E'];
             q.options.forEach((optText, optIdx) => {
                 const optBtn = document.createElement('div');
-                optBtn.className = 'option-btn';
+                optBtn.className = 'option-btn border border-slate-200 rounded-xl p-3 sm:p-4 flex items-center cursor-pointer bg-white';
                 
                 const isSelected = userAnswers[index] === optIdx;
                 const isAnswered = userAnswers.hasOwnProperty(index);
@@ -808,8 +606,8 @@
                 }
 
                 optBtn.innerHTML = `
-                    <span class="option-prefix">(${prefixes[optIdx]})</span>
-                    <span class="option-text">${optText}</span>
+                    <span class="font-bold text-slate-500 w-8 flex-shrink-0">(${prefixes[optIdx]})</span>
+                    <span class="text-slate-800 text-base flex-grow">${formatText(optText)}</span>
                 `;
 
                 optBtn.onclick = () => {
@@ -821,28 +619,45 @@
                 optionsContainer.appendChild(optBtn);
             });
 
-            // Pembahasan Box
+            // Explanation Box
             const expBox = document.getElementById('explanation-box');
             if (userAnswers.hasOwnProperty(index)) {
-                document.getElementById('explanation-text').innerHTML = q.explanation;
-                expBox.classList.add('visible');
+                document.getElementById('explanation-text').innerHTML = formatText(q.explanation);
+                expBox.classList.remove('hidden');
             } else {
-                expBox.classList.remove('visible');
+                expBox.classList.add('hidden');
             }
 
-            // Update Nav Active State
+            // Navigation status
             document.querySelectorAll('.nav-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === index);
             });
 
-            // Re-render LaTeX
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
+            // Trigger KaTeX rendering on the card
+            renderKaTeX();
 
-            // Button state
             document.getElementById('btn-prev').disabled = index === 0;
             document.getElementById('btn-next').innerText = index === questionsData.length - 1 ? 'Selesai & Evaluasi' : 'Selanjutnya \u2192';
+        }
+
+        function formatText(str) {
+            if (!str) return '';
+            // Convert markdown **text** to <strong>text</strong>
+            return str.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        }
+
+        function renderKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
         }
 
         function selectOption(qIdx, optIdx) {
@@ -882,19 +697,6 @@
             document.getElementById('current-score').innerText = score;
         }
 
-        function startTimer() {
-            const timerDisplay = document.getElementById('timer');
-            setInterval(() => {
-                if (timeRemaining > 0) {
-                    timeRemaining--;
-                    const mins = Math.floor(timeRemaining / 60);
-                    const secs = timeRemaining % 60;
-                    timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                    if (timeRemaining % 10 === 0) saveState();
-                }
-            }, 1000);
-        }
-
         function showResultsModal() {
             let correctCount = 0;
             let wrongCount = 0;
@@ -917,11 +719,14 @@
             document.getElementById('count-empty').innerText = emptyCount;
 
             const modal = document.getElementById('result-modal');
-            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function closeModal() {
-            document.getElementById('result-modal').style.display = 'none';
+            const modal = document.getElementById('result-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         function confirmReset() {
@@ -929,7 +734,6 @@
                 localStorage.removeItem('defantri_quiz_answers');
                 localStorage.removeItem('defantri_quiz_time');
                 userAnswers = {};
-                timeRemaining = 110 * 60;
                 renderNavGrid();
                 loadQuestion(0);
             }
